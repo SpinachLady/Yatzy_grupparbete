@@ -29,24 +29,26 @@ public class GUI extends JFrame implements ActionListener{
     private JButton rollDiceButton = new JButton("Kasta");
     private JPanel mainPanel = new JPanel(new BorderLayout());
     private JPanel dicePanel = new JPanel();
-    private Category ettor = new Category("Ettor", 1);
-    private Category tvåor = new Category("Tvåor", 2);
-    private Category treor = new Category("Treor", 3);
-    private Category fyror = new Category("Fyror", 4);
-    private Category femmor = new Category("Femmor", 5);
-    private Category sexor = new Category("Sexor", 6);
-    private Category ettPar = new Category("Ett par");
-    private Category tvåPar = new Category("Två par");
-    private Category tretal = new Category("Tretal");
-    private Category fyrtal = new Category("Fyrtal");
-    private Category litenStege = new Category("Liten stege");
-    private Category storStege = new Category("Stor stege");
-    private Category kåk = new Category("Kåk");
-    private Category chans = new Category("Chans");
-    private Category yatzy = new Category("Yatzy");
+    private Category ettor = new SimpleCategory("Ettor", 1);
+    private Category tvåor = new SimpleCategory("Tvåor", 2);
+    private Category treor = new SimpleCategory("Treor", 3);
+    private Category fyror = new SimpleCategory("Fyror", 4);
+    private Category femmor = new SimpleCategory("Femmor", 5);
+    private Category sexor = new SimpleCategory("Sexor", 6);
+    private Category ettPar = new AdvancedCategory("Ett par");
+    private Category tvåPar = new AdvancedCategory("Två par");
+    private Category tretal = new AdvancedCategory("Tretal");
+    private Category fyrtal = new AdvancedCategory("Fyrtal");
+    private Category litenStege = new AdvancedCategory("Liten stege");
+    private Category storStege = new AdvancedCategory("Stor stege");
+    private Category kåk = new AdvancedCategory("Kåk");
+    private Category chans = new AdvancedCategory("Chans");
+    private Category yatzy = new AdvancedCategory("Yatzy");
     private ArrayList<Category> allCategories = new ArrayList<>();
     private int [] diceResults = {0, 0, 0, 0, 0};
     private int diceRolledTimes = 0;
+    Category[] categories = {ettor, tvåor, treor, fyror, femmor, sexor, ettPar, tvåPar, tretal,
+            fyrtal, litenStege, storStege, kåk, chans, yatzy};
 
     public GUI() {
         dices.add(dice1);dices.add(dice2);dices.add(dice3);dices.add(dice4);dices.add(dice5);
@@ -80,32 +82,7 @@ public class GUI extends JFrame implements ActionListener{
         setVisible(true);
     }
     private void createCategoryPanel() {
-        Category[] categories = {ettor, tvåor, treor, fyror, femmor, sexor, ettPar, tvåPar, tretal,
-        fyrtal, litenStege, storStege, kåk, chans, yatzy};
-
         for (Category category : categories) {
-            categoryPanel.addMouseListener(new MouseAdapter() {
-                int score = category.getScore(diceResults);
-                String stringScore = String.valueOf(score);
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    super.mouseClicked(e);
-                    category.setCategoryScore(stringScore);
-                    category.setThisCategoryScore(score);
-                }
-
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                    super.mouseEntered(e);
-                    category.setCategoryScore(stringScore);
-                }
-
-                @Override
-                public void mouseExited(MouseEvent e) {
-                    super.mouseExited(e);
-                    category.setCategoryScore("");
-                }
-            });
             categoryPanel.add(category.getCategoryPanel());
         }
     }
@@ -126,6 +103,31 @@ public class GUI extends JFrame implements ActionListener{
                 }
             }
 
+        }
+    }
+    public void addMouseListenerToCategoryPanel () {
+        for (Category category : categories) {
+            category.getCategoryPanel().addMouseListener(new MouseAdapter() {
+                int score = category.getScore(diceResults);
+                String stringScore = String.valueOf(score);
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    super.mouseClicked(e);
+                    category.setCategoryScore(stringScore);
+                    category.setThisCategoryScore(score);
+                }
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    super.mouseEntered(e);
+                    category.setCategoryScore(stringScore);
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    super.mouseExited(e);
+                    category.setCategoryScore("");
+                }
+            });
         }
     }
     public int getRandomInt () {
