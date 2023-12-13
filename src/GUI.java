@@ -49,6 +49,8 @@ public class GUI extends JFrame implements ActionListener {
     private ArrayList<Category> allCategories = new ArrayList<>();
     private ArrayList<Integer> diceResults = new ArrayList<>();
     private int movesCompleted;
+    private int score;
+    private String stringScore;
     private boolean categoryChosen = false;
     Category[] categories = {ettor, tvåor, treor, fyror, femmor, sexor, ettPar, tvåPar, tretal,
             fyrtal, litenStege, storStege, kåk, chans, yatzy};
@@ -94,6 +96,42 @@ public class GUI extends JFrame implements ActionListener {
         mainPanel.add(dicePanel, BorderLayout.SOUTH);
         mainPanel.add(categoryPanel, BorderLayout.CENTER);
 
+        for (Category category : categories) {
+            category.getCategoryPanel().addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    super.mouseClicked(e);
+                    score = category.getScore(diceResults);
+                    stringScore = String.valueOf(score);
+                    category.setCategoryScoreLabel(stringScore);
+                    category.setThisCategoryScore(score);
+                    category.getCategoryPanel().setBackground(chosenCategory);
+                    changeDiceEnabledStatus();
+                    while (!diceResults.isEmpty()) {
+                        diceResults.remove(0);
+                    }
+                    categoryChosen = true;
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    super.mouseEntered(e);
+                    score = category.getScore(diceResults);
+                    stringScore = String.valueOf(score);
+                    if (category.thisCategoryScore == 0) {
+                        category.setCategoryScoreLabel("    " + stringScore);
+                    }
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    super.mouseExited(e);
+                    if (category.getThisCategoryScore() == 0) {
+                        category.setCategoryScoreLabel("");
+                    }
+                }
+            });
+        }
         createCategoryPanel();
         // Konfigurera huvudfönstret
         setTitle("Yatzy Game");
@@ -137,41 +175,6 @@ public class GUI extends JFrame implements ActionListener {
                 }
             }
             changeDiceEnabledStatus();
-            for (Category category : categories) {
-                category.getCategoryPanel().addMouseListener(new MouseAdapter() {
-                    int score = category.getScore(diceResults);
-                    String stringScore = String.valueOf(score);
-
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        super.mouseClicked(e);
-                        category.setCategoryScoreLabel(stringScore);
-                        category.setThisCategoryScore(score);
-                        category.getCategoryPanel().setBackground(chosenCategory);
-                        changeDiceEnabledStatus();
-                        while (!diceResults.isEmpty()) {
-                            diceResults.remove(0);
-                        }
-                        categoryChosen = true;
-                    }
-
-                    @Override
-                    public void mouseEntered(MouseEvent e) {
-                        super.mouseEntered(e);
-                        if (category.thisCategoryScore == 0) {
-                            category.setCategoryScoreLabel(stringScore);
-                        }
-                    }
-
-                    @Override
-                    public void mouseExited(MouseEvent e) {
-                        super.mouseExited(e);
-                        if (category.getThisCategoryScore() == 0) {
-                            category.setCategoryScoreLabel("");
-                        }
-                    }
-                });
-            }
         }
 
     }
