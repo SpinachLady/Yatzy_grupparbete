@@ -1,4 +1,7 @@
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Objects;
 
 public class AdvancedCategory extends Category {
 
@@ -7,23 +10,24 @@ public class AdvancedCategory extends Category {
     }
 
     @Override
-    public int getScore(int[] diceScores) {
+    public int getScore(ArrayList<Integer> diceScores) {
         int score = 0;
-        Arrays.sort(diceScores);
+        Collections.sort(diceScores);
+        System.out.println(diceScores);
         if (name.equals("Ett par")) {
-            for (int i = diceScores.length - 1; i > 0; i--) {
-                if (diceScores[i] == diceScores[i - 1]) {
-                    score = diceScores[i] * 2;
+            for (int i = diceScores.size() - 1; i > 0; i--) {
+                if (Objects.equals(diceScores.get(i), diceScores.get(i - 1))) {
+                    score = diceScores.get(i) * 2;
                     break;
                 }
             }
         }
-        if (name.equals("Två par")) {
+        else if (name.equals("Två par")) {
             int count = 0;
-            for (int i = diceScores.length - 1; i > 0; i--) {
-                if (diceScores[i] == diceScores[i - 1]) {
+            for (int i = diceScores.size() - 1; i > 0; i--) {
+                if (Objects.equals(diceScores.get(i), diceScores.get(i - 1))) {
                     count++;
-                    score = score + (diceScores[i] * 2);
+                    score = score + (diceScores.get(i) * 2);
                 }
             }
             if (count != 2) {
@@ -31,32 +35,32 @@ public class AdvancedCategory extends Category {
             }
 
         }
-        if (name.equals("Tretal")) {
-            for (int i = diceScores.length - 1; i > 0; i--) {
-                if (diceScores[i] == diceScores[i - 1] && diceScores[i] == diceScores[i - 2]) {
-                    score = diceScores[i] * 3;
+        else if (name.equals("Tretal")) {
+            for (int i = diceScores.size() - 1; i > 0; i--) {
+                if (Objects.equals(diceScores.get(i), diceScores.get(i - 1)) && Objects.equals(diceScores.get(i), diceScores.get(i - 2))) {
+                    score = diceScores.get(i) * 3;
                     break;
                 }
             }
         }
-        if (name.equals("Fyrtal")) {
-            for (int i = diceScores.length - 1; i > 0; i--) {
-                if (diceScores[i] == diceScores[i - 1] && diceScores[i] == diceScores[i - 2] && diceScores[i] == diceScores[i - 3]) {
-                    score = diceScores[i] * 4;
+        else if (name.equals("Fyrtal")) {
+            for (int i = diceScores.size() - 1; i > 2; i--) {
+                if (Objects.equals(diceScores.get(i), diceScores.get(i - 1)) && Objects.equals(diceScores.get(i), diceScores.get(i - 2)) && Objects.equals(diceScores.get(i), diceScores.get(i - 3))) {
+                    score = diceScores.get(i) * 4;
                     break;
                 }
             }
         }
-        if (name.equals("Kåk")) {
+        else if (name.equals("Kåk")) {
             boolean hasPair = false;
             boolean hasThree = false;
-            for (int i = diceScores.length - 1; i > 0; i--) {
-                if (diceScores[i] == diceScores[i - 1] && diceScores[i] == diceScores[i - 2]) {
-                    score = score + (diceScores[i] * 3);
+            for (int i = diceScores.size() - 1; i > 2; i--) {
+                if (Objects.equals(diceScores.get(i), diceScores.get(i - 1)) && Objects.equals(diceScores.get(i), diceScores.get(i - 2))) {
+                    score = score + (diceScores.get(i) * 3);
                     hasThree = true;
 
-                } else if (diceScores[i] == diceScores[i - 1]) {
-                    score = score + (diceScores[i] * 2);
+                } else if (Objects.equals(diceScores.get(i), diceScores.get(i - 1))) {
+                    score = score + (diceScores.get(i) * 2);
                     hasPair = true;
                 }
             }
@@ -64,30 +68,28 @@ public class AdvancedCategory extends Category {
                 score = 0;
             }
         }
-        if (name.contains("stege")) {
-            int i = 0;
+        else if (name.contains("stege")) {
+            int start = 1;
             if (name.contains("Stor")) {
-                i = 1;
+                start = 2;
             }
-            int j = i + 5;
-            while (i < j) {
-                if (diceScores[i] != i + 1) {
+            for (int i = 0; i < diceScores.size(); i++) {
+                if (diceScores.get(i) != start + i) {
                     score = 0;
                     break;
                 } else {
-                    score = score + diceScores[i];
-                    i++;
+                    score = score + diceScores.get(i);
                 }
             }
         }
-        if (name.equals("Chans")) {
+        else if (name.equals("Chans")) {
             for (int diceScore : diceScores) {
                 score = score + diceScore;
             }
         }
-        if (name.equals("Yatzy")) {
-            for (int i = diceScores.length - 1; i > 0; i--) {
-                if (diceScores[0] != diceScores[i]) {
+        else if (name.equals("Yatzy")) {
+            for (int i = diceScores.size() - 1; i > 0; i--) {
+                if (!Objects.equals(diceScores.get(i), diceScores.get(i-1))) {
                     score = 0;
                     break;
                 }
@@ -95,7 +97,7 @@ public class AdvancedCategory extends Category {
             }
         } else {
             System.out.println("unexpected error");
-            //System.exit(0);
+            System.exit(0);
         }
         return score;
     }

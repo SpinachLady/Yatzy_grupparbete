@@ -1,9 +1,7 @@
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.Arrays;
+import java.util.ArrayList;
 
 public abstract class Category {
     protected String name;
@@ -11,16 +9,19 @@ public abstract class Category {
     protected JLabel categoryLabel;
     protected JLabel categoryScore = new JLabel();
     protected int thisCategoryScore = 0;
+    private LineBorder categoryScoreBorder = new LineBorder(Color.red, 1);
+
 
     public Category(String name) {
         this.name = name;
-        categoryLabel = new JLabel(name);
+        categoryLabel = new JLabel("    " + name);
         setCategoryPanel();
     }
 
     private void setCategoryPanel() {
         categoryLabel.setPreferredSize(new Dimension(100, 40));
         categoryScore.setPreferredSize(new Dimension(50,40));
+        categoryScore.setBorder(categoryScoreBorder);
         categoryPanel.add(categoryLabel, BorderLayout.WEST);
         categoryPanel.add(categoryScore, BorderLayout.EAST);
     }
@@ -28,11 +29,14 @@ public abstract class Category {
         return categoryPanel;
     }
 
-    public void setCategoryScore (String score) {
+    public void setCategoryScoreLabel (String score) {
         categoryScore.setText(score);
     }
     public void setThisCategoryScore(int score) {
         thisCategoryScore = score;
     }
-    public abstract int getScore(int [] diceScores);
+    public int getThisCategoryScore () {
+        return thisCategoryScore;
+    }
+    public abstract int getScore(ArrayList<Integer> diceScores);
 }
