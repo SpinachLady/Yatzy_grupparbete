@@ -187,7 +187,6 @@ public class GUI extends JFrame implements ActionListener {
     public void selectAllDices() {
         for (JButton dice : dices) {
             dice.setBorderPainted(true);
-            dice.setEnabled(true);
             selectedDices.add(dice);
         }
     }
