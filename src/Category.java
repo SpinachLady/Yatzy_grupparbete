@@ -9,6 +9,7 @@ public abstract class Category {
     protected JLabel categoryLabel;
     protected JLabel categoryScore = new JLabel();
     protected int thisCategoryScore = 0;
+    public boolean isChosen = false;
     private LineBorder categoryScoreBorder = new LineBorder(Color.red, 1);
 
 

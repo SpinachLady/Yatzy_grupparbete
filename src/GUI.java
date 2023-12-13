@@ -11,7 +11,7 @@ public class GUI extends JFrame implements ActionListener {
     private final Color black = Color.BLACK;
     private final Color notChosenCategory = new Color(255, 255, 233);
     private final Color chosenCategory = new Color(255, 242, 198);
-    private LineBorder selectedBorder = new LineBorder(black, 2);
+    private final LineBorder selectedBorder = new LineBorder(black, 2);
     private ImageIcon dice1_image = new ImageIcon("src/dice_images/dice1.jpg");
     private ImageIcon dice2_image = new ImageIcon("src/dice_images/dice2.jpg");
     private ImageIcon dice3_image = new ImageIcon("src/dice_images/dice3.jpg");
@@ -27,8 +27,8 @@ public class GUI extends JFrame implements ActionListener {
     private JButton dice3 = new JButton();
     private JButton dice4 = new JButton();
     private JButton dice5 = new JButton();
-    private JPanel categoryPanel = new JPanel(new GridLayout(9, 2, 5, 5));
-    private JButton rollDiceButton = new JButton("Kasta");
+    private final JPanel categoryPanel = new JPanel(new GridLayout(9, 2, 5, 5));
+    private final JButton rollDiceButton = new JButton("Kasta");
     private JPanel mainPanel = new JPanel(new BorderLayout());
     private JPanel dicePanel = new JPanel();
     private Category ettor = new SimpleCategory("Ettor", 1);
@@ -52,6 +52,7 @@ public class GUI extends JFrame implements ActionListener {
     private int score;
     private String stringScore;
     private boolean categoryChosen = false;
+    private boolean inChoosingMode = false;
     Category[] categories = {ettor, tvåor, treor, fyror, femmor, sexor, ettPar, tvåPar, tretal,
             fyrtal, litenStege, storStege, kåk, chans, yatzy};
 
@@ -100,33 +101,36 @@ public class GUI extends JFrame implements ActionListener {
             category.getCategoryPanel().addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    super.mouseClicked(e);
-                    score = category.getScore(diceResults);
-                    stringScore = String.valueOf(score);
-                    category.setCategoryScoreLabel(stringScore);
-                    category.setThisCategoryScore(score);
-                    category.getCategoryPanel().setBackground(chosenCategory);
-                    changeDiceEnabledStatus();
-                    while (!diceResults.isEmpty()) {
-                        diceResults.remove(0);
+                    if (!category.isChosen && inChoosingMode) {
+                        super.mouseClicked(e);
+                        score = category.getScore(diceResults);
+                        stringScore = String.valueOf(score);
+                        category.setCategoryScoreLabel(stringScore);
+                        category.setThisCategoryScore(score);
+                        category.isChosen = true;
+                        category.getCategoryPanel().setBackground(chosenCategory);
+                        changeDiceEnabledStatus();
+                        while (!diceResults.isEmpty()) {
+                            diceResults.remove(0);
+                        }
+                        categoryChosen = true;
                     }
-                    categoryChosen = true;
                 }
 
                 @Override
                 public void mouseEntered(MouseEvent e) {
-                    super.mouseEntered(e);
-                    score = category.getScore(diceResults);
-                    stringScore = String.valueOf(score);
-                    if (category.thisCategoryScore == 0) {
-                        category.setCategoryScoreLabel("    " + stringScore);
+                    if (!category.isChosen && inChoosingMode) {
+                        super.mouseEntered(e);
+                        score = category.getScore(diceResults);
+                        stringScore = String.valueOf(score);
+                        category.setCategoryScoreLabel(stringScore);
                     }
                 }
 
                 @Override
                 public void mouseExited(MouseEvent e) {
-                    super.mouseExited(e);
-                    if (category.getThisCategoryScore() == 0) {
+                    if (!category.isChosen && inChoosingMode) {
+                        super.mouseExited(e);
                         category.setCategoryScoreLabel("");
                     }
                 }
@@ -164,6 +168,7 @@ public class GUI extends JFrame implements ActionListener {
 
     public void letUserChooseCategory() {
         if (!categoryChosen) {
+            inChoosingMode = true;
             movesCompleted = 0;
             for (JButton dice : dices) {
                 int count2 = 1;
@@ -184,6 +189,8 @@ public class GUI extends JFrame implements ActionListener {
             rollDiceButton.setEnabled(false);
         } else {
             rollDiceButton.setEnabled(true);
+            selectAllDices();
+            inChoosingMode = false;
         }
     }
 

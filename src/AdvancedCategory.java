@@ -54,19 +54,34 @@ public class AdvancedCategory extends Category {
         else if (name.equals("Kåk")) {
             boolean hasPair = false;
             boolean hasThree = false;
-            for (int i = diceScores.size() - 1; i > 2; i--) {
-                if (Objects.equals(diceScores.get(i), diceScores.get(i - 1)) && Objects.equals(diceScores.get(i), diceScores.get(i - 2))) {
-                    score = score + (diceScores.get(i) * 3);
-                    hasThree = true;
+            int pairPoints = 0;
+            int threePoints = 0;
 
-                } else if (Objects.equals(diceScores.get(i), diceScores.get(i - 1))) {
-                    score = score + (diceScores.get(i) * 2);
-                    hasPair = true;
-                }
+            int countFrequency1 = Collections.frequency(diceScores, diceScores.get(diceScores.size()-1));
+            if (countFrequency1 == 2) {
+                hasPair = true;
+                pairPoints = diceScores.get(diceScores.size()-1) * 2;
             }
-            if (!hasThree || !hasPair) {
-                score = 0;
+            else if (countFrequency1 == 3) {
+                hasThree = true;
+                threePoints = diceScores.get(diceScores.size()-1) * 3;
             }
+
+            int countFrequency2 = Collections.frequency(diceScores, diceScores.get(0));
+            if (countFrequency2 == 2) {
+                hasPair = true;
+                pairPoints = diceScores.get(0) * 2;
+            }
+            else if (countFrequency2 == 3) {
+                hasThree = true;
+                threePoints = diceScores.get(diceScores.size()-1) * 3;
+            }
+            if (hasPair && hasThree) {
+                score = pairPoints + threePoints;
+            }
+
+
+
         }
         else if (name.contains("stege")) {
             int start = 1;
