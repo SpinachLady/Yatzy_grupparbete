@@ -29,10 +29,9 @@ public class AdvancedCategory extends Category {
                     score = score + (diceScores.get(i) * 2);
                 }
             }
-            if (count != 2) {
+            if (count < 2) {
                 score = 0;
             }
-
         }
         else if (name.equals("Tretal")) {
             for (int i = diceScores.size() - 1; i > 0; i--) {

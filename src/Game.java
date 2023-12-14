@@ -5,6 +5,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -54,6 +60,7 @@ public class Game extends JFrame implements ActionListener {
     private Category yatzy = new AdvancedCategory("Yatzy");
     private ArrayList<Category> allCategories = new ArrayList<>();
     private ArrayList<Integer> diceResults = new ArrayList<>();
+    private FileWriter writeToScoreBoard = new FileWriter("src/ScoreBoard.txt");
     private int movesCompleted;
     private int score;
     private int totalScore = 0;
@@ -64,7 +71,7 @@ public class Game extends JFrame implements ActionListener {
     Category[] categories = {ettor, tvåor, treor, fyror, femmor, sexor, ettPar, tvåPar, tretal,
             fyrtal, litenStege, storStege, kåk, chans, yatzy};
 
-    public Game() {
+    public Game() throws IOException {
         dices.add(dice1);dices.add(dice2);dices.add(dice3);dices.add(dice4);dices.add(dice5);
         allCategories.add(ettor);allCategories.add(tvåor);allCategories.add(treor);allCategories.add(fyror);
         allCategories.add(femmor);allCategories.add(sexor);allCategories.add(ettPar);allCategories.add(tvåPar);
@@ -106,7 +113,11 @@ public class Game extends JFrame implements ActionListener {
                         categoryChosen = true;
                         totalPlayedCategories++;
                         if (totalPlayedCategories == 15) {
-                            finishGame();
+                            try {
+                                finishGame();
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
                         }
                     }
                 }
@@ -209,13 +220,13 @@ public class Game extends JFrame implements ActionListener {
         return randomInt;
     }
 
-    public void addScoreToList() {
+    public void addScoreToList() throws IOException {
         String result = "Spelat den " + LocalDate.now() + "\nResultat: " + totalScore + " poäng";
-        //lägg till result i fil
+        writeToScoreBoard.write(result);
 
     }
 
-    public void finishGame() {
+    public void finishGame() throws IOException {
         int addToList = JOptionPane.showConfirmDialog(null, "Bra spelat! Ditt resultat blev " + totalScore + "\nVill du spara ditt resultat i topplistan?");
         if (addToList == JOptionPane.YES_OPTION) {
             addScoreToList();
