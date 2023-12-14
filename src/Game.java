@@ -33,7 +33,7 @@ public class Game extends JFrame implements ActionListener {
     private final JPanel categoryPanel = new JPanel(new GridLayout(9, 2, 5, 5));
     private final JPanel resultPanel = new JPanel(new BorderLayout());
     private final JLabel resultLabel = new JLabel("    " + "Totalt");
-    private JLabel totalScoreLabel = new JLabel("      " +"0");
+    private JLabel totalScoreLabel = new JLabel("      " + "0");
     private final JButton rollDiceButton = new JButton("Kasta");
     private JPanel mainPanel = new JPanel(new BorderLayout());
     private JPanel dicePanel = new JPanel();
@@ -65,32 +65,13 @@ public class Game extends JFrame implements ActionListener {
             fyrtal, litenStege, storStege, kåk, chans, yatzy};
 
     public Game() {
-        dices.add(dice1);
-        dices.add(dice2);
-        dices.add(dice3);
-        dices.add(dice4);
-        dices.add(dice5);
-        allCategories.add(ettor);
-        allCategories.add(tvåor);
-        allCategories.add(treor);
-        allCategories.add(fyror);
-        allCategories.add(femmor);
-        allCategories.add(sexor);
-        allCategories.add(ettPar);
-        allCategories.add(tvåPar);
-        allCategories.add(tretal);
-        allCategories.add(fyrtal);
-        allCategories.add(litenStege);
-        allCategories.add(storStege);
-        allCategories.add(kåk);
-        allCategories.add(chans);
-        allCategories.add(yatzy);
-        dice_images.add(dice1_image);
-        dice_images.add(dice2_image);
-        dice_images.add(dice3_image);
-        dice_images.add(dice4_image);
-        dice_images.add(dice5_image);
-        dice_images.add(dice6_image);
+        dices.add(dice1);dices.add(dice2);dices.add(dice3);dices.add(dice4);dices.add(dice5);
+        allCategories.add(ettor);allCategories.add(tvåor);allCategories.add(treor);allCategories.add(fyror);
+        allCategories.add(femmor);allCategories.add(sexor);allCategories.add(ettPar);allCategories.add(tvåPar);
+        allCategories.add(tretal);allCategories.add(fyrtal);allCategories.add(litenStege);allCategories.add(storStege);
+        allCategories.add(kåk);allCategories.add(chans);allCategories.add(yatzy);
+        dice_images.add(dice1_image);dice_images.add(dice2_image);dice_images.add(dice3_image);
+        dice_images.add(dice4_image);dice_images.add(dice5_image);dice_images.add(dice6_image);
 
         for (JButton dice : dices) {
             dice.setPreferredSize(new Dimension(100, 100));
@@ -168,7 +149,7 @@ public class Game extends JFrame implements ActionListener {
 
         }
         resultLabel.setPreferredSize(new Dimension(100, 40));
-        totalScoreLabel.setPreferredSize(new Dimension(50,40));
+        totalScoreLabel.setPreferredSize(new Dimension(50, 40));
         totalScoreLabel.setBorder(totalScoreBorder);
         resultPanel.add(resultLabel, BorderLayout.WEST);
         resultPanel.add(totalScoreLabel, BorderLayout.EAST);
@@ -227,11 +208,13 @@ public class Game extends JFrame implements ActionListener {
         int randomInt = (int) (Math.random() * 6);
         return randomInt;
     }
+
     public void addScoreToList() {
         String result = "Spelat den " + LocalDate.now() + "\nResultat: " + totalScore + " poäng";
         //lägg till result i fil
 
     }
+
     public void finishGame() {
         int addToList = JOptionPane.showConfirmDialog(null, "Bra spelat! Ditt resultat blev " + totalScore + "\nVill du spara ditt resultat i topplistan?");
         if (addToList == JOptionPane.YES_OPTION) {
@@ -266,14 +249,5 @@ public class Game extends JFrame implements ActionListener {
             }
 
         }
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new Game();
-            }
-        });
     }
 }
