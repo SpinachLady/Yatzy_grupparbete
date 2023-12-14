@@ -110,7 +110,7 @@ public class Game extends JFrame implements ActionListener {
                 rulesText.append(line + "\n");
             }
         } catch (IOException e) {
-            e.printStackTrace(); // Handle file reading errors
+            e.printStackTrace();
         }
         JScrollPane rulesScrollPane = new JScrollPane(rulesText);
 
@@ -191,7 +191,6 @@ public class Game extends JFrame implements ActionListener {
             });
         }
         createCategoryPanel();
-        // Konfigurera huvudfönstret
         setTitle("Yatzy Game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         firstPageFrame.setVisible(false);
@@ -274,7 +273,6 @@ public class Game extends JFrame implements ActionListener {
     public void addScoreToList() throws IOException {
         String result = "Spelat den " + LocalDate.now() + "\nResultat: " + totalScore + " poäng";
 
-        // Save result to the "topscorers.txt" file
         try (FileWriter writer = new FileWriter("src/topscorers.txt", true);
              BufferedWriter bufferWriter = new BufferedWriter(writer);
              PrintWriter out = new PrintWriter(bufferWriter)) {
@@ -282,7 +280,7 @@ public class Game extends JFrame implements ActionListener {
             out.println(result);
 
         } catch (IOException e) {
-            e.printStackTrace(); // Handle file writing errors
+            e.printStackTrace();
         }
 
     }
