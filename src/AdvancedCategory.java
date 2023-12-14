@@ -73,7 +73,7 @@ public class AdvancedCategory extends Category {
             }
             else if (countFrequency2 == 3) {
                 hasThree = true;
-                threePoints = diceScores.get(diceScores.size()-1) * 3;
+                threePoints = diceScores.get(0) * 3;
             }
             if (hasPair && hasThree) {
                 score = pairPoints + threePoints;
