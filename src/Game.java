@@ -8,7 +8,7 @@ import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class GUI extends JFrame implements ActionListener {
+public class Game extends JFrame implements ActionListener {
     private final Color black = Color.BLACK;
     private final Color notChosenCategory = new Color(255, 255, 233);
     private final Color chosenCategory = new Color(255, 242, 198);
@@ -64,7 +64,7 @@ public class GUI extends JFrame implements ActionListener {
     Category[] categories = {ettor, tvåor, treor, fyror, femmor, sexor, ettPar, tvåPar, tretal,
             fyrtal, litenStege, storStege, kåk, chans, yatzy};
 
-    public GUI() {
+    public Game() {
         dices.add(dice1);
         dices.add(dice2);
         dices.add(dice3);
@@ -272,7 +272,7 @@ public class GUI extends JFrame implements ActionListener {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new GUI();
+                new Game();
             }
         });
     }
