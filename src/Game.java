@@ -68,8 +68,6 @@ public class Game extends JFrame implements ActionListener {
     private String stringScore;
     private boolean categoryChosen = false;
     private boolean inChoosingMode = false;
-    Category[] categories = {ettor, tvåor, treor, fyror, femmor, sexor, ettPar, tvåPar, tretal,
-            fyrtal, litenStege, storStege, kåk, chans, yatzy};
 
     public Game() throws IOException {
         dices.add(dice1);dices.add(dice2);dices.add(dice3);dices.add(dice4);dices.add(dice5);
@@ -93,7 +91,7 @@ public class Game extends JFrame implements ActionListener {
         mainPanel.add(dicePanel, BorderLayout.SOUTH);
         mainPanel.add(categoryPanel, BorderLayout.CENTER);
 
-        for (Category category : categories) {
+        for (Category category : allCategories) {
             category.getCategoryPanel().addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -154,7 +152,7 @@ public class Game extends JFrame implements ActionListener {
     }
 
     private void createCategoryPanel() {
-        for (Category category : categories) {
+        for (Category category : allCategories) {
             category.getCategoryPanel().setBackground(notChosenCategory);
             categoryPanel.add(category.getCategoryPanel());
 
@@ -168,7 +166,7 @@ public class Game extends JFrame implements ActionListener {
         categoryPanel.add(resultPanel);
     }
 
-    public void rollDices() {
+    private void rollDices() {
         categoryChosen = false;
         for (JButton dice : selectedDices) {
             dice.setIcon(dice_images.get(getRandomInt()));
@@ -179,7 +177,7 @@ public class Game extends JFrame implements ActionListener {
         }
     }
 
-    public void letUserChooseCategory() {
+    private void letUserChooseCategory() {
         if (!categoryChosen) {
             inChoosingMode = true;
             movesCompleted = 0;
@@ -197,7 +195,7 @@ public class Game extends JFrame implements ActionListener {
 
     }
 
-    public void changeDiceEnabledStatus() {
+    private void changeDiceEnabledStatus() {
         if (rollDiceButton.isEnabled()) {
             rollDiceButton.setEnabled(false);
         } else {
@@ -208,25 +206,25 @@ public class Game extends JFrame implements ActionListener {
         }
     }
 
-    public void selectAllDices() {
+    private void selectAllDices() {
         for (JButton dice : dices) {
             dice.setBorderPainted(true);
             selectedDices.add(dice);
         }
     }
 
-    public int getRandomInt() {
+    private int getRandomInt() {
         int randomInt = (int) (Math.random() * 6);
         return randomInt;
     }
 
-    public void addScoreToList() throws IOException {
+    private void addScoreToList() throws IOException {
         String result = "Spelat den " + LocalDate.now() + "\nResultat: " + totalScore + " poäng";
         writeToScoreBoard.write(result);
 
     }
 
-    public void finishGame() throws IOException {
+    private void finishGame() throws IOException {
         int addToList = JOptionPane.showConfirmDialog(null, "Bra spelat! Ditt resultat blev " + totalScore + "\nVill du spara ditt resultat i topplistan?");
         if (addToList == JOptionPane.YES_OPTION) {
             addScoreToList();
