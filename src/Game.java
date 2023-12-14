@@ -5,9 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -266,7 +264,17 @@ public class Game extends JFrame implements ActionListener {
 
     public void addScoreToList() {
         String result = "Spelat den " + LocalDate.now() + "\nResultat: " + totalScore + " poäng";
-        //lägg till result i fil
+
+        // Save result to the "topscorers.txt" file
+        try (FileWriter writer = new FileWriter("src/topscorers.txt", true);
+             BufferedWriter bufferWriter = new BufferedWriter(writer);
+             PrintWriter out = new PrintWriter(bufferWriter)) {
+
+            out.println(result);
+
+        } catch (IOException e) {
+            e.printStackTrace(); // Handle file writing errors
+        }
 
     }
 
