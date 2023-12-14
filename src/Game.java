@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Game extends JFrame implements ActionListener {
+    private CategoryFactory cf = new CategoryFactory();
     private final Color black = Color.BLACK;
     private final Color notChosenCategory = new Color(255, 255, 233);
     private final Color chosenCategory = new Color(255, 242, 198);
@@ -39,21 +40,21 @@ public class Game extends JFrame implements ActionListener {
     private final JButton rollDiceButton = new JButton("Kasta");
     private JPanel mainPanel = new JPanel(new BorderLayout());
     private JPanel dicePanel = new JPanel();
-    private Category ettor = new SimpleCategory("Ettor", 1);
-    private Category tvåor = new SimpleCategory("Tvåor", 2);
-    private Category treor = new SimpleCategory("Treor", 3);
-    private Category fyror = new SimpleCategory("Fyror", 4);
-    private Category femmor = new SimpleCategory("Femmor", 5);
-    private Category sexor = new SimpleCategory("Sexor", 6);
-    private Category ettPar = new AdvancedCategory("Ett par");
-    private Category tvåPar = new AdvancedCategory("Två par");
-    private Category tretal = new AdvancedCategory("Tretal");
-    private Category fyrtal = new AdvancedCategory("Fyrtal");
-    private Category litenStege = new AdvancedCategory("Liten stege");
-    private Category storStege = new AdvancedCategory("Stor stege");
-    private Category kåk = new AdvancedCategory("Kåk");
-    private Category chans = new AdvancedCategory("Chans");
-    private Category yatzy = new AdvancedCategory("Yatzy");
+    private Category ettor = cf.getCategory(CategoryTypes.SIMPLE_CATEGORY, "Ettor", 1);
+    private Category tvåor = cf.getCategory(CategoryTypes.SIMPLE_CATEGORY,"Tvåor", 2);
+    private Category treor = cf.getCategory(CategoryTypes.SIMPLE_CATEGORY,"Treor", 3);
+    private Category fyror = cf.getCategory(CategoryTypes.SIMPLE_CATEGORY,"Fyror", 4);
+    private Category femmor = cf.getCategory(CategoryTypes.SIMPLE_CATEGORY,"Femmor", 5);
+    private Category sexor = cf.getCategory(CategoryTypes.SIMPLE_CATEGORY,"Sexor", 6);
+    private Category ettPar = cf.getCategory(CategoryTypes.ADVANCED_CATEGORY,"Ett par", 0);
+    private Category tvåPar = cf.getCategory(CategoryTypes.ADVANCED_CATEGORY,"Två par", 0);
+    private Category tretal = cf.getCategory(CategoryTypes.ADVANCED_CATEGORY,"Tretal", 0);
+    private Category fyrtal = cf.getCategory(CategoryTypes.ADVANCED_CATEGORY,"Fyrtal", 0);
+    private Category litenStege = cf.getCategory(CategoryTypes.ADVANCED_CATEGORY,"Liten stege", 0);
+    private Category storStege = cf.getCategory(CategoryTypes.ADVANCED_CATEGORY,"Stor stege", 0);
+    private Category kåk = cf.getCategory(CategoryTypes.ADVANCED_CATEGORY,"Kåk", 0);
+    private Category chans = cf.getCategory(CategoryTypes.ADVANCED_CATEGORY,"Chans", 0);
+    private Category yatzy = cf.getCategory(CategoryTypes.ADVANCED_CATEGORY,"Yatzy", 0);
     private ArrayList<Category> allCategories = new ArrayList<>();
     private ArrayList<Integer> diceResults = new ArrayList<>();
     private FileWriter writeToScoreBoard = new FileWriter("src/ScoreBoard.txt");
@@ -64,8 +65,6 @@ public class Game extends JFrame implements ActionListener {
     private String stringScore;
     private boolean categoryChosen = false;
     private boolean inChoosingMode = false;
-    Category[] categories = {ettor, tvåor, treor, fyror, femmor, sexor, ettPar, tvåPar, tretal,
-            fyrtal, litenStege, storStege, kåk, chans, yatzy};
 
     public Game() throws IOException {
         dices.add(dice1);dices.add(dice2);dices.add(dice3);dices.add(dice4);dices.add(dice5);
@@ -89,7 +88,7 @@ public class Game extends JFrame implements ActionListener {
         mainPanel.add(dicePanel, BorderLayout.SOUTH);
         mainPanel.add(categoryPanel, BorderLayout.CENTER);
 
-        for (Category category : categories) {
+        for (Category category : allCategories) {
             category.getCategoryPanel().addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -150,7 +149,7 @@ public class Game extends JFrame implements ActionListener {
     }
 
     private void createCategoryPanel() {
-        for (Category category : categories) {
+        for (Category category : allCategories) {
             category.getCategoryPanel().setBackground(notChosenCategory);
             categoryPanel.add(category.getCategoryPanel());
 
@@ -164,7 +163,7 @@ public class Game extends JFrame implements ActionListener {
         categoryPanel.add(resultPanel);
     }
 
-    public void rollDices() {
+    private void rollDices() {
         categoryChosen = false;
         for (JButton dice : selectedDices) {
             dice.setIcon(dice_images.get(getRandomInt()));
@@ -175,7 +174,7 @@ public class Game extends JFrame implements ActionListener {
         }
     }
 
-    public void letUserChooseCategory() {
+    private void letUserChooseCategory() {
         if (!categoryChosen) {
             inChoosingMode = true;
             movesCompleted = 0;
@@ -193,7 +192,7 @@ public class Game extends JFrame implements ActionListener {
 
     }
 
-    public void changeDiceEnabledStatus() {
+    private void changeDiceEnabledStatus() {
         if (rollDiceButton.isEnabled()) {
             rollDiceButton.setEnabled(false);
         } else {
@@ -211,18 +210,18 @@ public class Game extends JFrame implements ActionListener {
         }
     }
 
-    public int getRandomInt() {
+    private int getRandomInt() {
         int randomInt = (int) (Math.random() * 6);
         return randomInt;
     }
 
-    public void addScoreToList() throws IOException {
+    private void addScoreToList() throws IOException {
         String result = "Spelat den " + LocalDate.now() + "\nResultat: " + totalScore + " poäng";
         writeToScoreBoard.write(result);
 
     }
 
-    public void finishGame() throws IOException {
+    private void finishGame() throws IOException {
         int addToList = JOptionPane.showConfirmDialog(null, "Bra spelat! Ditt resultat blev " + totalScore + "\nVill du spara ditt resultat i topplistan?");
         if (addToList == JOptionPane.YES_OPTION) {
             addScoreToList();
