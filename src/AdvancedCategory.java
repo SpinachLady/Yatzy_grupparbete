@@ -13,7 +13,6 @@ public class AdvancedCategory extends Category {
     public int getScore(ArrayList<Integer> diceScores) {
         int score = 0;
         Collections.sort(diceScores);
-        System.out.println(diceScores);
         if (name.equals("Ett par")) {
             for (int i = diceScores.size() - 1; i > 0; i--) {
                 if (Objects.equals(diceScores.get(i), diceScores.get(i - 1))) {

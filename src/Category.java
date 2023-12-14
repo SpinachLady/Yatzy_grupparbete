@@ -31,7 +31,7 @@ public abstract class Category {
     }
 
     public void setCategoryScoreLabel (String score) {
-        categoryScore.setText(score);
+        categoryScore.setText("      " + score);
     }
     public void setThisCategoryScore(int score) {
         thisCategoryScore = score;

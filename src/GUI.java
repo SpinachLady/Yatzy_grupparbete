@@ -5,12 +5,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class GUI extends JFrame implements ActionListener {
     private final Color black = Color.BLACK;
     private final Color notChosenCategory = new Color(255, 255, 233);
     private final Color chosenCategory = new Color(255, 242, 198);
+    private final Color resultPanelColor = new Color(204, 229, 255);
+    private final LineBorder totalScoreBorder = new LineBorder(Color.blue, 1);
     private final LineBorder selectedBorder = new LineBorder(black, 2);
     private ImageIcon dice1_image = new ImageIcon("src/dice_images/dice1.jpg");
     private ImageIcon dice2_image = new ImageIcon("src/dice_images/dice2.jpg");
@@ -28,6 +31,9 @@ public class GUI extends JFrame implements ActionListener {
     private JButton dice4 = new JButton();
     private JButton dice5 = new JButton();
     private final JPanel categoryPanel = new JPanel(new GridLayout(9, 2, 5, 5));
+    private final JPanel resultPanel = new JPanel(new BorderLayout());
+    private final JLabel resultLabel = new JLabel("    " + "Totalt");
+    private JLabel totalScoreLabel = new JLabel("      " +"0");
     private final JButton rollDiceButton = new JButton("Kasta");
     private JPanel mainPanel = new JPanel(new BorderLayout());
     private JPanel dicePanel = new JPanel();
@@ -50,6 +56,8 @@ public class GUI extends JFrame implements ActionListener {
     private ArrayList<Integer> diceResults = new ArrayList<>();
     private int movesCompleted;
     private int score;
+    private int totalScore = 0;
+    private int totalPlayedCategories = 0;
     private String stringScore;
     private boolean categoryChosen = false;
     private boolean inChoosingMode = false;
@@ -105,6 +113,7 @@ public class GUI extends JFrame implements ActionListener {
                         super.mouseClicked(e);
                         score = category.getScore(diceResults);
                         stringScore = String.valueOf(score);
+                        totalScore = totalScore + score;
                         category.setCategoryScoreLabel(stringScore);
                         category.setThisCategoryScore(score);
                         category.isChosen = true;
@@ -114,6 +123,10 @@ public class GUI extends JFrame implements ActionListener {
                             diceResults.remove(0);
                         }
                         categoryChosen = true;
+                        totalPlayedCategories++;
+                        if (totalPlayedCategories == 15) {
+                            finishGame();
+                        }
                     }
                 }
 
@@ -152,7 +165,15 @@ public class GUI extends JFrame implements ActionListener {
         for (Category category : categories) {
             category.getCategoryPanel().setBackground(notChosenCategory);
             categoryPanel.add(category.getCategoryPanel());
+
         }
+        resultLabel.setPreferredSize(new Dimension(100, 40));
+        totalScoreLabel.setPreferredSize(new Dimension(50,40));
+        totalScoreLabel.setBorder(totalScoreBorder);
+        resultPanel.add(resultLabel, BorderLayout.WEST);
+        resultPanel.add(totalScoreLabel, BorderLayout.EAST);
+        resultPanel.setBackground(resultPanelColor);
+        categoryPanel.add(resultPanel);
     }
 
     public void rollDices() {
@@ -191,6 +212,7 @@ public class GUI extends JFrame implements ActionListener {
             rollDiceButton.setEnabled(true);
             selectAllDices();
             inChoosingMode = false;
+            totalScoreLabel.setText("      " + totalScore);
         }
     }
 
@@ -204,6 +226,23 @@ public class GUI extends JFrame implements ActionListener {
     public int getRandomInt() {
         int randomInt = (int) (Math.random() * 6);
         return randomInt;
+    }
+    public void addScoreToList() {
+        String result = "Spelat den " + LocalDate.now() + "\nResultat: " + totalScore + " poäng";
+        //lägg till result i fil
+
+    }
+    public void finishGame() {
+        int addToList = JOptionPane.showConfirmDialog(null, "Bra spelat! Ditt resultat blev " + totalScore + "\nVill du spara ditt resultat i topplistan?");
+        if (addToList == JOptionPane.YES_OPTION) {
+            addScoreToList();
+            System.exit(1);
+        } else if (addToList == JOptionPane.NO_OPTION) {
+            System.exit(0);
+        } else {
+            System.exit(2);
+        }
+
     }
 
     @Override
@@ -225,6 +264,7 @@ public class GUI extends JFrame implements ActionListener {
                 dice.setBorderPainted(false);
                 selectedDices.remove(dice);
             }
+
         }
     }
 
