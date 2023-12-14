@@ -61,7 +61,6 @@ public class Game extends JFrame implements ActionListener {
     private Category yatzy = new AdvancedCategory("Yatzy");
     private ArrayList<Category> allCategories = new ArrayList<>();
     private ArrayList<Integer> diceResults = new ArrayList<>();
-    private FileWriter writeToScoreBoard = new FileWriter("src/ScoreBoard.txt");
     private int movesCompleted;
     private int score;
     private int totalScore = 0;
@@ -79,7 +78,7 @@ public class Game extends JFrame implements ActionListener {
     JFrame rulesFrame = new JFrame("Yatzy Rules");
     JPanel rulesPagePanel = new JPanel(new BorderLayout());
 
-    public Game(){
+    public Game() throws IOException{
         firstPageFrame.setSize(300, 200);
         firstPageFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -121,8 +120,7 @@ public class Game extends JFrame implements ActionListener {
         rulesPagePanel.add(startTheNewGame, BorderLayout.SOUTH);
     }
 
-    public void StartTheGame() {
-    public Game() throws IOException {
+    public void StartTheGame() throws IOException{
         dices.add(dice1);dices.add(dice2);dices.add(dice3);dices.add(dice4);dices.add(dice5);
         allCategories.add(ettor);allCategories.add(tvåor);allCategories.add(treor);allCategories.add(fyror);
         allCategories.add(femmor);allCategories.add(sexor);allCategories.add(ettPar);allCategories.add(tvåPar);
@@ -329,7 +327,11 @@ public class Game extends JFrame implements ActionListener {
         }
 
         if (e.getSource() == startTheNewGame){
-            StartTheGame();
+            try {
+                StartTheGame();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 }
