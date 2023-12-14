@@ -1,0 +1,12 @@
+1)För att börja spela Yatzy behöver du fem tärningar och en poängtabell.
+Sedan behöver du kunna Yatzy reglerna såklart!
+2)Varje spelare får tre kast per omgång.
+Under varje kast får spelaren välja vilka tärningar som ska kastas om och vilka som ska sparas.
+3)Efter tre kast ska spelaren fylla i en ruta på poängtabellen.
+Det finns olika kombinationer att välja mellan, ett par, två par, triss, fyrtal, liten stege, stor stege, chans och yatzy.
+4)Poängen för varje kombination bestäms av antalet tärningar som matchar kombinationen.
+Till exempel ger ett fyrtal fem tärningar med samma nummer poängen 24.
+5)Spelet fortsätter tills poängtabellen är full.
+Varje spelare får 15 chanser att fylla i poängtabellen.
+6)När poängtabellen är full räknas poängen och spelaren med högst poäng vinner spelet.
+Lycka till!
