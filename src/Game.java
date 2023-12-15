@@ -5,8 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList ;
 
@@ -57,7 +56,6 @@ public class Game extends JFrame implements ActionListener {
     private Category yatzy = cf.getCategory(CategoryTypes.ADVANCED_CATEGORY,"Yatzy", 0);
     private ArrayList<Category> allCategories = new ArrayList<>();
     private ArrayList<Integer> diceResults = new ArrayList<>();
-    private FileWriter writeToScoreBoard = new FileWriter("src/ScoreBoard.txt");
     private int movesCompleted;
     private int score;
     private int totalScore = 0;
@@ -65,8 +63,55 @@ public class Game extends JFrame implements ActionListener {
     private String stringScore;
     private boolean categoryChosen = false;
     private boolean inChoosingMode = false;
+    JButton rulesButton = new JButton("Rules");
+    JButton startTheNewGame = new JButton("Start the Game");
+    JFrame firstPageFrame = new JFrame("Yatzy");
+    JPanel firstPagePanel = new JPanel();
+    JFrame rulesFrame = new JFrame("Yatzy Rules");
+    JPanel rulesPagePanel = new JPanel(new BorderLayout());
+    public Game() throws IOException{
+        firstPageFrame.setSize(300, 200);
+        firstPageFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    public Game() throws IOException {
+        firstPageFrame.add(firstPagePanel);
+        firstPageFrame.setVisible(true);
+
+        firstPagePanel.add(rulesButton);
+        firstPagePanel.add(startTheNewGame);
+
+        rulesButton.addActionListener(this);
+        startTheNewGame.addActionListener(this);
+    }
+
+    public void rulesPage(){
+        rulesFrame.setSize(1050, 500);
+        rulesFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        firstPageFrame.setVisible(false);
+        rulesFrame.setVisible(true);
+        rulesFrame.add(rulesPagePanel);
+
+        JTextArea rulesText = new JTextArea();
+        rulesText.setEditable(false);
+        Font textAreaFont = new Font("Arial", Font.PLAIN, 20);
+        rulesText.setFont(textAreaFont);
+        try (BufferedReader reader = new BufferedReader(new FileReader("src/rules.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                rulesText.append(line + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        JScrollPane rulesScrollPane = new JScrollPane(rulesText);
+
+        startTheNewGame.addActionListener(this);
+
+        rulesPagePanel.add(rulesScrollPane, BorderLayout.CENTER);
+        rulesPagePanel.add(startTheNewGame, BorderLayout.SOUTH);
+    }
+
+    public void StartTheGame() throws IOException {
         dices.add(dice1);dices.add(dice2);dices.add(dice3);dices.add(dice4);dices.add(dice5);
         allCategories.add(ettor);allCategories.add(tvåor);allCategories.add(treor);allCategories.add(fyror);
         allCategories.add(femmor);allCategories.add(sexor);allCategories.add(ettPar);allCategories.add(tvåPar);
@@ -140,6 +185,8 @@ public class Game extends JFrame implements ActionListener {
         // Konfigurera huvudfönstret
         setTitle("Yatzy Game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        firstPageFrame.setVisible(false);
+        rulesFrame.setVisible(false);
         setContentPane(mainPanel);
         pack();
         setLocationRelativeTo(null);
@@ -217,7 +264,15 @@ public class Game extends JFrame implements ActionListener {
 
     private void addScoreToList() throws IOException {
         String result = "Spelat den " + LocalDate.now() + "\nResultat: " + totalScore + " poäng";
-        writeToScoreBoard.write(result);
+        try (FileWriter writer = new FileWriter("src/topscorers.txt", true);
+             BufferedWriter bufferWriter = new BufferedWriter(writer);
+             PrintWriter out = new PrintWriter(bufferWriter)) {
+
+            out.println(result);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -254,6 +309,17 @@ public class Game extends JFrame implements ActionListener {
                 selectedDices.remove(dice);
             }
 
+        }
+        if (e.getSource() == rulesButton){
+            rulesPage();
+        }
+
+        if (e.getSource() == startTheNewGame){
+            try {
+                StartTheGame();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 }
